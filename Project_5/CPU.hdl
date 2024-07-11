@@ -1,0 +1,60 @@
+CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+    PARTS:
+
+    //ALU
+    ALU(x=regD , y=ALUin , zx=instruction[11] , nx=instruction[10] , 
+        zy=instruction[9] , ny=instruction[8] , f=instruction[7] , no=instruction[6] , 
+        out=ALUout , zr=zrout , ng=ngout );
+
+    //D Register
+    And(a=instruction[15], b=instruction[4], out=loadD);
+    Register(in=ALUout, load=loadD, out=regD);
+
+    //A Register
+    Not(in=instruction[15], out=isAinstruction);
+    Or(a=isAinstruction, b=instruction[5], out=loadA);
+    Mux16(a=instruction, b=ALUout, sel=instruction[15] , out=regAin);
+    Register(in=regAin , load=loadA, out=regA);
+
+    //ALU Input Selection
+    Mux16(a=regA, b=inM, sel=instruction[12], out=ALUin);
+
+    //Memory Write
+    And(a=instruction[15], b=instruction[3], out=writeM);
+
+    // Address for memory operations
+    Or16(a=regA, b=false, out[0..14]=addressM);
+
+    // Program Counter logic
+    PC(in=regA, load=PCload, inc=true, reset=reset, out[0..14]=pc);
+
+    //Jump Logic
+    And(a=instruction[15], b=instruction[0], out=jumpIfGreater);
+    And(a=instruction[15], b=instruction[1], out=jumpIfEqual);
+    And(a=instruction[15], b=instruction[2], out=jumpIfLess);
+
+    Not(in=ngout , out=positive);
+    Not(in=zrout, out=notZero);
+    And(a=positive, b=notZero, out=pos);
+
+    And(a=jumpIfGreater, b=pos, out=jumpGreater);
+    And(a=jumpIfEqual, b=zrout, out=jumpEqual);
+    And(a=jumpIfLess, b=ngout, out=jumpLess);
+
+    Or(a=jumpGreater, b=jumpEqual, out=jumpTemp);
+    Or(a=jumpTemp, b=jumpLess, out=PCload);
+
+    // Output M
+    Or16(a=ALUout, b=false, out=outM);
+}
