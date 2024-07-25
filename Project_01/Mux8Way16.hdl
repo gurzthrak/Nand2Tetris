@@ -12,3 +12,4 @@ CHIP Mux8Way16 {
     Mux16(a=ab , b=cd , sel=sel[1] , out=abcd );
     Mux16(a=ef , b=gh , sel=sel[1] , out=efgh );
     Mux16(a=abcd , b=efgh , sel=sel[2] , out=out );
+}

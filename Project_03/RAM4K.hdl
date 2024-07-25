@@ -14,3 +14,4 @@ CHIP RAM4K {
     RAM512(in=in , load=sel7 , address=address[0..8] , out=out7 );
     Mux8Way16(a=out0 , b=out1 , c=out2 , d=out3 , e=out4 , f=out5 , g=out6 , h=out7 , sel=address[9..11] , out=out );
     //// Replace this comment with your code.
+}

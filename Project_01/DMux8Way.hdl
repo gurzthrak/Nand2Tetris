@@ -10,3 +10,4 @@ CHIP DMux8Way {
     DMux(in=cd , sel=sel[0] , a=c , b=d );
     DMux(in=ef , sel=sel[0] , a=e , b=f );
     DMux(in=gh , sel=sel[0] , a=g , b=h );
+}

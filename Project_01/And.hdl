@@ -5,3 +5,4 @@ CHIP And {
     PARTS:
     Nand(a=a , b=b , out=n1 );
     Not(in=n1 , out=out );
+}

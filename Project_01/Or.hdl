@@ -6,3 +6,4 @@ CHIP Or {
     Not(in=a , out=na );
     Not(in=b , out=nb );
     Nand(a=na , b=nb , out=out );
+}

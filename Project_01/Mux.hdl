@@ -7,3 +7,4 @@ CHIP Mux {
     And(a=a , b=notSel , out=as );
     And(a=b , b=sel , out=bs );
     Or(a=as , b=bs , out=out );
+}

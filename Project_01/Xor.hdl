@@ -8,3 +8,4 @@ CHIP Xor {
     And(a=a , b=notB , out=outAnd1 );
     And(a=b , b=notA , out=outAnd2 );
     Or(a=outAnd1 , b=outAnd2 , out=out );
+}
